@@ -1,0 +1,19 @@
+{
+  "name": "brainvita",
+  "version": "1.0.0",
+  "description": "Hackathon_jQuery",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sundarcodes/brainvita.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sundarcodes/brainvita/issues"
+  },
+  "homepage": "https://github.com/sundarcodes/brainvita#readme"
+}
