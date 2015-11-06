@@ -1,6 +1,9 @@
 (function(){
+  var zIndexVal=1000;
+  horizontalMove=false;
   var BrainVita = {
     init: function(){
+      //$('.marble').css('position','static');
       $('.marble').draggable({
         containment: '.playArea',
         cursor: 'move',
@@ -36,6 +39,7 @@
       dest_col=parseInt(id_dest_holder.split('_')[1]);
       //console.log(source_row,source_col,dest_row,dest_col);
       if (source_row === dest_row) {
+        horizontalMove=true;
         // If the rows are same, the absolute difference between columns should be two
         if (Math.abs(source_col-dest_col) === 2){
           // Mark the in-between marble to be chucked out
@@ -45,11 +49,15 @@
           // Find the holder corresponding to this id and mark the marble in it to chuck-out
           id_holder=chucked_out_row.toString()+"_"+chucked_out_col.toString();
           //console.log('#'+id_holder+ " > div");
+          if ($('#'+id_holder).hasClass('empty')) {
+            return false;
+          }
           marble=$('#'+id_holder+ " > div");
           marble.addClass('chuck-out');
           return true;
         }
       }else if (source_col === dest_col) {
+        horizontalMove=false;
         // If the columns are same, the absolute difference between rows should be two
         if (Math.abs(dest_row-source_row) === 2){
           // Mark the in-between marble to be chucked out
@@ -57,6 +65,9 @@
           chucked_out_col=source_col;
           // Find the holder corresponding to this id and mark the marble in it to chuck-out
           id_holder=chucked_out_row.toString()+"_"+chucked_out_col.toString();
+          if ($('#'+id_holder).hasClass('empty')) {
+            return false;
+          }
           marble=$('#'+id_holder+ " > div");
           marble.addClass('chuck-out');
           return true;
@@ -65,6 +76,7 @@
       return false;
     },
     handleDragStart: function (ev,ui) {
+      $(this).css("z-index", zIndexVal++);
       // This function will be triggered when the drag starts.
       // This will be used to highlight the possible moves that could be done
       //console.log("Element drag started");
@@ -74,9 +86,15 @@
       if (BrainVita.canBeDropped($(this),ui.draggable)) {
           // This will make the marble not to be dragged back to its original position
           ui.draggable.draggable( 'option', 'revert', false );
-
+          //ui.draggable.css("position", "absolute");
           // This will make the marble to fit in the slot of the holder perfectly
-          ui.draggable.css("position", "absolute");
+          //console.log(horizontalMove);
+          //if (horizontalMove) {
+          //  ui.draggable.css("position", "absolute");
+          //}else {
+          //  ui.draggable.css("position", "static");
+          //}
+          //ui.draggable.css("position", "static");
           ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
           // Remove the class empty from the holder where the marble was dropped into
           //debugger
@@ -84,6 +102,8 @@
           holder_of_dragged_marble=$(ui.draggable).parent();
           holder_of_dragged_marble.addClass('empty');
           $(ui.draggable).appendTo(this);
+          ui.draggable.css("position", "static");
+          $(ui.draggable).draggable( 'enable' );
           $(this).removeClass('empty');
           // Now the remove the marble which was jumped across
           // We can remove the marble which is marked as chuck-out
