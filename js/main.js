@@ -1,15 +1,16 @@
 (function(){
   var zIndexVal=1000;
-  horizontalMove=false;
+  total_number_of_marbles=34;
+  marbles_remaining=34;
   var BrainVita = {
     init: function(){
-      //$('.marble').css('position','static');
       $('.marble').draggable({
         containment: '.playArea',
         cursor: 'move',
         revert: true,
-        stack: '.marble',
-        start: BrainVita.handleDragStart
+        stack: '.moving',
+        start: BrainVita.handleDragStart,
+        stop: BrainVita.handleDragStop
       });
 
       $('.holder').droppable({
@@ -17,6 +18,11 @@
         drop: BrainVita.handleDropEvent
         });
 
+    },
+    resetDraggable:function() {
+      $('.marble').draggable("destroy");
+      $('.holder').droppable("destroy");
+      BrainVita.init();
     },
     canBeDropped: function (droppedToObj,draggedObj) {
 
@@ -39,7 +45,6 @@
       dest_col=parseInt(id_dest_holder.split('_')[1]);
       //console.log(source_row,source_col,dest_row,dest_col);
       if (source_row === dest_row) {
-        horizontalMove=true;
         // If the rows are same, the absolute difference between columns should be two
         if (Math.abs(source_col-dest_col) === 2){
           // Mark the in-between marble to be chucked out
@@ -57,7 +62,6 @@
           return true;
         }
       }else if (source_col === dest_col) {
-        horizontalMove=false;
         // If the columns are same, the absolute difference between rows should be two
         if (Math.abs(dest_row-source_row) === 2){
           // Mark the in-between marble to be chucked out
@@ -76,34 +80,33 @@
       return false;
     },
     handleDragStart: function (ev,ui) {
-      $(this).css("z-index", zIndexVal++);
-      // This function will be triggered when the drag starts.
-      // This will be used to highlight the possible moves that could be done
-      //console.log("Element drag started");
+      console.log("Draggin started");
+    },
+    handleDragStop: function (ev,ui) {
+      console.log("Draggin stopped");
+    },
+    checkGameOver: function() {
+        // Check if game is over
+        // Get all the marbles available
+        marblesArray=$('.marble');
     },
     handleDropEvent: function (ev,ui) {
       //console.log("Element dropped");
       if (BrainVita.canBeDropped($(this),ui.draggable)) {
           // This will make the marble not to be dragged back to its original position
           ui.draggable.draggable( 'option', 'revert', false );
-          //ui.draggable.css("position", "absolute");
           // This will make the marble to fit in the slot of the holder perfectly
-          //console.log(horizontalMove);
-          //if (horizontalMove) {
-          //  ui.draggable.css("position", "absolute");
-          //}else {
-          //  ui.draggable.css("position", "static");
-          //}
-          //ui.draggable.css("position", "static");
           ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
-          // Remove the class empty from the holder where the marble was dropped into
-          //debugger
           // Add the class empty to the holder from where the marble was moved
           holder_of_dragged_marble=$(ui.draggable).parent();
           holder_of_dragged_marble.addClass('empty');
           $(ui.draggable).appendTo(this);
-          ui.draggable.css("position", "static");
-          $(ui.draggable).draggable( 'enable' );
+          // Reset the position properties as its being inserted into a new div
+          ui.draggable.css("left", "0");
+          ui.draggable.css("right", "0");
+          ui.draggable.css("top", "0");
+          ui.draggable.css("bottom", "0");
+          // Remove the class empty from the holder where the marble was dropped into
           $(this).removeClass('empty');
           // Now the remove the marble which was jumped across
           // We can remove the marble which is marked as chuck-out
@@ -112,13 +115,15 @@
           holder.addClass('empty');
           marble.fadeOut('slow','swing');
           marble.remove();
+          marbles_remaining--;
+          if (marbles_remaining < 10) {
+            Calci.checkGameOver();
+          }
       }
-
     },
-
   }
 
   $(document).ready(function(){
-    BrainVita.init()
+    BrainVita.init();
   });
 })();
