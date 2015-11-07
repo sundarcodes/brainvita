@@ -80,10 +80,10 @@
       return false;
     },
     handleDragStart: function (ev,ui) {
-      console.log("Draggin started");
+      //console.log("Draggin started");
     },
     handleDragStop: function (ev,ui) {
-      console.log("Draggin stopped");
+      //console.log("Draggin stopped");
     },
     checkGameOver: function() {
         // Check if game is over
@@ -106,6 +106,9 @@
           ui.draggable.css("right", "0");
           ui.draggable.css("top", "0");
           ui.draggable.css("bottom", "0");
+          ui.draggable.css("height", "10vh");
+          ui.draggable.css("width", "10vh");
+          ui.draggable.draggable( 'option', 'revert', true );
           // Remove the class empty from the holder where the marble was dropped into
           $(this).removeClass('empty');
           // Now the remove the marble which was jumped across
