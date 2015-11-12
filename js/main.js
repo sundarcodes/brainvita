@@ -8,7 +8,9 @@
         containment: '.playArea',
         cursor: 'move',
         revert: true,
-        stack: '.moving',
+        stack: '.marble',
+        distance: 0,
+        zIndex: 100,
         start: BrainVita.handleDragStart,
         stop: BrainVita.handleDragStop
       });
@@ -80,6 +82,7 @@
       return false;
     },
     handleDragStart: function (ev,ui) {
+       $(this).css('z-index','200');
       //console.log("Draggin started");
     },
     handleDragStop: function (ev,ui) {
@@ -120,7 +123,7 @@
           marble.remove();
           marbles_remaining--;
           if (marbles_remaining < 10) {
-            Calci.checkGameOver();
+            BrainVita.checkGameOver();
           }
       }
     },
