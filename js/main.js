@@ -8,12 +8,14 @@
         containment: '.playArea',
         cursor: 'move',
         revert: true,
+        //distance: 0,
         stack: '.marble',
-        distance: 0,
-        zIndex: 100,
+        // zIndex: 100,
         start: BrainVita.handleDragStart,
         stop: BrainVita.handleDragStop
       });
+      // var stack = $('.marble').draggable('option','stack');
+      // $('.marble').draggable('option','stack','.marble');
 
       $('.holder').droppable({
         accept: '.marble',
@@ -82,7 +84,7 @@
       return false;
     },
     handleDragStart: function (ev,ui) {
-       $(this).css('z-index','200');
+       //$(this).css('z-index','200');
       //console.log("Draggin started");
     },
     handleDragStop: function (ev,ui) {

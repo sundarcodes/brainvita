@@ -8,9 +8,9 @@ body {
     text-align: center;
     background-color: #1D2032; }
 
-.vcenter {
-  top: 50%;
-  transform: translateY(50%); }
+.row-1 {
+  padding-top: 4vh;
+}
 
 .holder {
   height: 10vh;
